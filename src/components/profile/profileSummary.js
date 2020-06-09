@@ -7,20 +7,11 @@ import AddressForm from "../addresses/addressForm";
 class ProfileSummary extends Component {
   state = {
     items: [],
-    opened: ""
   };
   componentDidMount() {
     const { items } = this.props;
-    const { opened } = this.props.location.state;
-    this.setState({ items, opened });
+    this.setState({ items });
   }
-
-  handleItemClick = id => {
-    const opened = id;
-    this.setState({
-      opened
-    });
-  };
 
   renderProfileItems(items) {
     return (
@@ -29,16 +20,12 @@ class ProfileSummary extends Component {
           <Link
             key={`itmL${i}`}
             className="profile-card"
-            to={{
-              pathname: `/profile/${item.data.id}`,
-              state: { opened: item.data.id }
-            }}
+            to={`/profile/${item.data.id}`}
           >
             <ProfileItems
               key={`itm${i}`}
               faIcon={item.faIcon}
               data={item.data}
-              onClick={this.handleItemClick}
             />
           </Link>
         ))}
@@ -61,18 +48,13 @@ class ProfileSummary extends Component {
       </div>
     );
   }
-  renderComponent(open) {
-    switch (open) {
-      case "addresses":
-        return this.renderAddresses();
-      case "newAddress":
-        return this.renderAddressForm();
-      case "profileItems":
-        return this.renderProfileItems(this.state.items);
+  renderComponent(param) {
+    const open = param.navitem && param.id ? param.id : param.navitem;
+    if (open && open === "addresses") return this.renderAddresses();
+    else if (open && open === "new") return this.renderAddressForm();
+    else if (open && open !== "new") return this.renderAddressForm(open);
 
-      default:
-        return this.renderProfileItems(this.state.items);
-    }
+    return this.renderProfileItems(this.state.items);
   }
   render() {
     return (
@@ -80,7 +62,7 @@ class ProfileSummary extends Component {
         <div className="row">
           <div className="col-3"></div>
           <div className="col">
-            {this.renderComponent(this.props.location.state.opened)}
+            {this.renderComponent(this.props.match.params)}
           </div>
         </div>
       </div>
@@ -88,9 +70,9 @@ class ProfileSummary extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    items: state.profileItems.items
+    items: state.profileItems.items,
   };
 };
 

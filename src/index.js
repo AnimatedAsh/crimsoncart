@@ -10,7 +10,8 @@ import { Provider, useSelector } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
 
 import "./index.css";
-import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/js/bootstrap.min.js";
 import "@fortawesome/fontawesome-free/css/all.css";
 
 import { store, rrfProps } from "./store/store";
@@ -19,7 +20,7 @@ import App from "./App";
 library.add(far, fas);
 
 function AuthIsLoaded({ children }) {
-  const auth = useSelector(state => state.firebase.auth);
+  const auth = useSelector((state) => state.firebase.auth);
   if (!isLoaded(auth)) return <div>Loading Screen...</div>;
   return children;
 }

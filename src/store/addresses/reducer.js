@@ -20,7 +20,7 @@ const initState = {
     //     pin: "500006",
     //     phoneNumber: "7923465664"
     //   }
-  ]
+  ],
 };
 
 const addressesReducer = (state = initState, action) => {
@@ -29,8 +29,18 @@ const addressesReducer = (state = initState, action) => {
       console.log(action);
       console.log("addAddress", action.address);
       return state;
-    case "ADD_ADDRESS-ERROR":
+    case "ADD_ADDRESS_ERROR":
       console.log("Add address error", action.err);
+      return state;
+    case "UPDATE_ADDRESS":
+      console.log(action);
+      console.log("updateAddress", action.address);
+      return state;
+    case "UPDATE_ADDRESS_ERROR":
+      console.log("Update address error", action.err);
+      return state;
+    case "DEFAULT_ADDRESS_UPDATE_ERROR":
+      console.log("Default address upadte error", action.err);
       return state;
     case "GET_ADDRESSES":
       console.log("get addresses", action.addresses);

@@ -1,23 +1,70 @@
-export const addAddress = address => {
-  return (dispatch, getState, getFirebase) => {
+export const addAddress = (address) => {
+  return async (dispatch, getState, getFirebase) => {
     const userId = getState().firebase.auth.uid;
+    if (address.defaultAddress)
+      await unsetDefaultAddress(userId, dispatch, getFirebase);
     return getFirebase()
       .firestore()
       .collection("addresses")
       .add({
         ...address,
         userId,
-        createdAt: new Date()
+        createdAt: new Date(),
       })
       .then(() => {
         dispatch({ type: "ADD_ADDRESS", address });
       })
-      .then(err => {
+      .catch((err) => {
         dispatch({ type: "ADD_ADDRESS_ERROR", err });
       });
   };
 };
 
+export const updateAddress = (address, id) => {
+  return async (dispatch, getState, getFirebase) => {
+    const userId = getState().firebase.auth.uid;
+    if (address.defaultAddress)
+      await unsetDefaultAddress(userId, dispatch, getFirebase);
+    return getFirebase()
+      .firestore()
+      .collection("addresses")
+      .doc(id)
+      .update({
+        ...address,
+
+        updatedAt: new Date(),
+      })
+      .then(() => {
+        dispatch({ type: "UPDATE_ADDRESS", address });
+      })
+      .catch((err) => {
+        dispatch({ type: "UPDATE_ADDRESS_ERROR", err });
+      });
+  };
+};
+
+const unsetDefaultAddress = async (userId, dispatch, getFirebase) => {
+  const currentdefaultAddress = await getFirebase()
+    .firestore()
+    .collection("addresses")
+    .where("userId", "==", userId)
+    .where("defaultAddress", "==", true)
+    .get();
+
+  currentdefaultAddress.forEach(function (doc) {
+    getFirebase()
+      .firestore()
+      .collection("addresses")
+      .doc(doc.id)
+      .update({ defaultAddress: false })
+      .then(() => {
+        return true;
+      })
+      .catch((err) => dispatch({ type: "DEFAULT_ADDRESS_UPDATE_ERROR", err }));
+  });
+
+  //return currentdefaultAddress.update({ defaultAddress: false });
+};
 // export const getAddressList = (userId, orderBy) => dispatch => {
 //   return http
 //     .get(`${apiEndpoint.apiEndpoint}/documents/addresses`)

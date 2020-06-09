@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { signOut } from "../../store/auth/actions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-const SignedInLinks = props => {
+const SignedInLinks = (props) => {
+  useEffect(() => {
+    let popover_element = document.querySelectorAll('[data-toggle="popover"]');
+    //popover_element.popover();
+  });
   return (
     <ul className="navbar-nav ml-auto">
       <li className="nav-item">
         <Link key="cart" className="cart" to="/cart">
-          <span className="fa-layers cart-icon fa-fw">
+          <span
+            className="fa-layers cart-icon fa-fw"
+            data-toggle="popover"
+            data-placement="bottom"
+            data-content={`Subtotal ${props.cartTotal.totalPrice}`}
+          >
             <FontAwesomeIcon
               className="circle cart-circle"
               icon="circle"
@@ -23,13 +32,15 @@ const SignedInLinks = props => {
               color="#343a40"
             />
           </span>
-          <span className="badge badge-warning cart-item-count-badge">1</span>
+          <span className="badge badge-warning cart-item-count-badge">
+            {props.cartTotal.productQuantity}
+          </span>
         </Link>
       </li>
       <li className="nav-item">
         <Link
           className="nav-link rounded-circle border-info avatar ml-4"
-          to={{ pathname: "/profile", state: { opened: "profileItems" } }}
+          to="/profile"
         >
           {props.profile.initials}
         </Link>
@@ -42,9 +53,14 @@ const SignedInLinks = props => {
     </ul>
   );
 };
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = (state) => {
   return {
-    signOut: () => dispatch(signOut())
+    cartTotal: state.total.data,
   };
 };
-export default connect(null, mapDispatchToProps)(SignedInLinks);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signOut: () => dispatch(signOut()),
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(SignedInLinks);

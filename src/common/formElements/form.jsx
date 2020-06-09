@@ -6,7 +6,7 @@ import CheckBox from "./checkBox";
 class Form extends Component {
   state = {
     data: {},
-    errors: {}
+    errors: {},
   };
 
   validate = () => {
@@ -25,7 +25,7 @@ class Form extends Component {
     return error ? error.details[0].message : null;
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const errors = this.validate();
     this.setState({ errors: errors || {} });
@@ -38,7 +38,9 @@ class Form extends Component {
     if (errorMessage) errors[input.name] = errorMessage;
     else delete errors[input.name];
     const data = { ...this.state.data };
-    data[input.name] = input.value;
+
+    if (input.type === "checkbox") data[input.name] = input.checked;
+    else data[input.name] = input.value;
     this.setState({ data, errors });
   };
 

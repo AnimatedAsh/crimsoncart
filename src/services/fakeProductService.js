@@ -1,6 +1,6 @@
 import * as categoriesAPI from "./fakeCategoryService";
 
-const products = [
+let products = [
   {
     _id: "5b21ca3eeb7f6fbccd471815",
     title: "Peach Hibiscus Plant without Pot",
@@ -8,7 +8,8 @@ const products = [
     numberInStock: 2,
     price: 200,
     productImageURL: "../img/peachHibiscus.jpg",
-    userRating: 4.5
+    thumbImageUrl: "../img/peachHibiscus_2.jpg",
+    userRating: 4.5,
   },
   {
     _id: "5b21ca3eeb7f6fbccd471816",
@@ -17,7 +18,8 @@ const products = [
     numberInStock: 5,
     price: 500,
     productImageURL: "../img/moneyplant.jpg",
-    userRating: 2.5
+    thumbImageUrl: "../img/moneyplant_2.jpg",
+    userRating: 2.5,
   },
   {
     _id: "5b21ca3eeb7f6fbccd471818",
@@ -26,8 +28,8 @@ const products = [
     numberInStock: 5,
     price: 499,
     productImageURL: "../img/whiteceramicpot.jpg",
-    userRating: 4
-  }
+    userRating: 4,
+  },
 ];
 
 export function getProducts() {
@@ -35,14 +37,14 @@ export function getProducts() {
 }
 
 export function getProduct(id) {
-  return products.find(p => p._id === id);
+  return products.find((p) => p._id === id);
 }
 
 export function saveProduct(product) {
-  let productInDb = products.find(p => p._id === product._id) || {};
+  let productInDb = products.find((p) => p._id === product._id) || {};
   productInDb.title = product.title;
   productInDb.category = categoriesAPI.categories.find(
-    c => c._id === product.categoryId
+    (c) => c._id === product.categoryId
   );
   productInDb.numberInStock = product.numberInStock;
   productInDb.price = product.price;
@@ -57,6 +59,6 @@ export function saveProduct(product) {
 }
 
 export function deleteProduct(id) {
-  let productInDb = products.find(p => p._id === id);
+  let productInDb = products.find((p) => p._id === id);
   products.splice(products.indexOf(productInDb), 1);
 }

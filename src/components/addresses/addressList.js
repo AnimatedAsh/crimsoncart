@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AddressSummaryCard from "./addressSummaryCard";
 
-const AddressList = props => {
+const AddressList = (props) => {
   const { addresses } = props;
   return (
     <div className="address-list section">
@@ -16,10 +16,7 @@ const AddressList = props => {
             <Link
               key={`newAddress`}
               className="newAddress-card"
-              to={{
-                pathname: `/profile/addresses/new`,
-                state: { opened: "newAddress" }
-              }}
+              to="/profile/addresses/new"
             >
               <FontAwesomeIcon className="plus" icon="plus" size="3x" />
             </Link>
@@ -27,29 +24,29 @@ const AddressList = props => {
         </div>
 
         {addresses &&
-          addresses.map(address => {
+          addresses.map((address) => {
             return <AddressSummaryCard address={address} key={address.id} />;
           })}
       </div>
     </div>
   );
 };
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     auth: state.firebase.auth,
-    addresses: state.firestore.ordered.addresses
+    addresses: state.firestore.ordered.addresses,
   };
 };
 export default compose(
   connect(mapStateToProps),
-  firestoreConnect(props => {
+  firestoreConnect((props) => {
     if (!props.auth.uid) return [];
     return [
       {
         collection: "addresses",
         where: [["userId", "==", props.auth.uid]],
-        orderBy: ["createdAt", "desc"]
-      }
+        orderBy: ["createdAt", "desc"],
+      },
     ];
   })
 )(AddressList);

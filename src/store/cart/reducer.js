@@ -1,24 +1,31 @@
+import { LOAD_CART, ADD_PRODUCT, REMOVE_PRODUCT } from "./types";
+
 const initialState = {
-  products: []
+  products: [],
 };
 
 export const cartReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "LOAD_CART":
+    case LOAD_CART:
       return {
         ...state,
-        products: action.products
+        products: action.products,
       };
-    case "ADD_PRODUCT":
+    case ADD_PRODUCT:
+      console.log("Added Product", action.cartProducts);
       return {
         ...state,
-        productToAdd: action.product
+        products: action.cartProducts,
       };
-    case "REMOVE_PRODUCT":
+    case REMOVE_PRODUCT:
       return {
         ...state,
-        productToRemove: action.product
+        products: action.products,
       };
-      deafult: return state;
+
+    default:
+      return state;
   }
 };
+
+export default cartReducer;

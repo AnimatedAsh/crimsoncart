@@ -6,6 +6,7 @@ import NavBar from "./components/layout/navBar";
 import SignIn from "./components/auth/signIn";
 import SignUp from "./components/auth/signUp";
 import ProfileSummary from "./components/profile/profileSummary";
+import CartShelf from "./components/cart/cartShelf";
 function App() {
   return (
     <React.Fragment>
@@ -16,6 +17,7 @@ function App() {
           <Route path="/signin" component={SignIn} />
           <Route path="/signup" component={SignUp} />
           <Route path="/profile/:navitem?/:id?" component={ProfileSummary} />
+          <Route path="/cart" component={CartShelf} />
         </Switch>
       </main>
     </React.Fragment>

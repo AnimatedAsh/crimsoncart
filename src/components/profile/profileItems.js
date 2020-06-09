@@ -1,14 +1,11 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-const ProfileItems = props => {
+const ProfileItems = (props) => {
   const { faIcon, data } = props;
   return (
     <div className="col mb-4 card-deck">
       <div className="card h-100">
-        <div
-          className="card-body profile-item-body"
-          onClick={() => props.onClick(data.id)}
-        >
+        <div className="card-body profile-item-body">
           <div className="row position-relative">
             <div className="col-3">
               <FontAwesomeIcon

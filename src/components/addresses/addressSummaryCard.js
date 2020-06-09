@@ -1,20 +1,20 @@
 import React from "react";
 import { connect } from "react-redux";
-
-const AddressSummaryCard = props => {
+import { Link } from "react-router-dom";
+export const AddressSummaryCard = (props) => {
   const {
     fullName,
     streetAddress,
     landMark,
     pin,
     phoneNumber,
-    defaultAddress
+    defaultAddress,
   } = props.address;
 
   const { address, cities, states } = props;
-  const cityName = cities.find(c => c.id === address.city).name;
+  const cityName = cities.find((c) => c.id === address.city).name;
 
-  const stateName = states.find(s => s.id === address.state).name;
+  const stateName = states.find((s) => s.id === address.state).name;
   return (
     <div className="col mb-4 card-deck">
       <div className="card h-100">
@@ -34,15 +34,22 @@ const AddressSummaryCard = props => {
             <abbr title="Phone">P :</abbr>
             &nbsp;{phoneNumber}
           </address>
+          <Link
+            key={`editAddress`}
+            className="editAddressForm"
+            to={`/profile/addresses/${address.id}`}
+          >
+            Edit
+          </Link>
         </div>
       </div>
     </div>
   );
 };
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     states: state.location.states,
-    cities: state.location.cities
+    cities: state.location.cities,
   };
 };
 export default connect(mapStateToProps)(AddressSummaryCard);

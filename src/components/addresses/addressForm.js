@@ -4,12 +4,11 @@ import Form from "../../common/formElements/form";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { addAddress } from "../../store/addresses/actions";
+import { addAddress, updateAddress } from "../../store/addresses/actions";
 
 class AddressForm extends Form {
   state = {
     data: {
-      id: "",
       fullName: "",
       streetAddress: "",
       landMark: "",
@@ -17,40 +16,53 @@ class AddressForm extends Form {
       state: "",
       pin: "",
       phoneNumber: "",
-      defaultAddress: false
+      defaultAddress: false,
     },
+    headerLabel: "",
+    isAdd: false,
     cities: [],
     states: [],
-    errors: {}
+    errors: {},
   };
 
   componentDidMount() {
     const states = this.props.states;
     const cities = this.props.cities;
-    const data = { ...this.state.data };
-    data["id"] = Date.now().toString();
-    this.setState({ cities, states, data });
 
-    // const addressId = this.props.match.params.id;
-    // if (addressId === "new") return;
+    this.setState({ cities, states });
+    const addressId = this.props.match.params.id;
+    const data = { ...this.state.data };
+    if (addressId === "new")
+      return this.setState({ isAdd: true, headerLabel: "Add Address" });
+
+    const address = this.props.address;
+    if (!address) return this.props.history.replace("/not-found");
+
+    this.setState({
+      data: this.mapToViewModel(address, addressId),
+      headerLabel: "Edit Address",
+    });
+  }
+
+  mapToViewModel(address) {
+    return {
+      fullName: address.fullName,
+      streetAddress: address.streetAddress,
+      landMark: address.landMark,
+      city: address.city,
+      state: address.state,
+      pin: address.pin,
+      phoneNumber: address.phoneNumber,
+      defaultAddress: address.defaultAddress,
+    };
   }
   schema = {
     id: Joi.string().allow(""),
-    fullName: Joi.string()
-      .required()
-      .label("Full Name"),
-    streetAddress: Joi.string()
-      .required()
-      .label("StreetAddress"),
-    landMark: Joi.string()
-      .allow("")
-      .label("Landmark"),
-    city: Joi.string()
-      .required()
-      .label("City"),
-    state: Joi.string()
-      .required()
-      .label("State"),
+    fullName: Joi.string().required().label("Full Name"),
+    streetAddress: Joi.string().required().label("StreetAddress"),
+    landMark: Joi.string().allow("").label("Landmark"),
+    city: Joi.string().required().label("City"),
+    state: Joi.string().required().label("State"),
     pin: Joi.string()
       .trim()
       .regex(/^\d{6}$/)
@@ -58,7 +70,7 @@ class AddressForm extends Form {
       .label("Pin")
       .error(() => {
         return {
-          message: "Please enter a valid Pin Code"
+          message: "Please enter a valid Pin Code",
         };
       }),
     phoneNumber: Joi.string()
@@ -68,21 +80,17 @@ class AddressForm extends Form {
       .label("Phone Number")
       .error(() => {
         return {
-          message: "Please enter a valid Phone Number"
+          message: "Please enter a valid Phone Number",
         };
       }),
-    defaultAddress: Joi.boolean().label("Default Address CheckBox")
-  };
-
-  handleSelect = () => {
-    console.log(this.state.data.city);
+    defaultAddress: Joi.boolean().label("Default Address CheckBox"),
   };
 
   doSubmit = () => {
-    this.props.addAddress(this.state.data);
+    if (this.state.isAdd) this.props.addAddress(this.state.data);
+    else this.props.updateAddress(this.state.data, this.state.isAdd);
     this.props.history.push({
       pathname: "/profile/addresses",
-      state: { opened: "addresses" }
     });
   };
   render() {
@@ -90,7 +98,7 @@ class AddressForm extends Form {
       <div className="container">
         <div className="row">
           <div className="col-xl-7 col-lg-7 col-md-8 col-sm-10 form p-2">
-            <h1 className="display-4 py-2"> Add Address</h1>
+            <h1 className="display-4 py-2"> {this.state.headerLabel}</h1>
             <div className="px-2">
               <form className="form" onSubmit={this.handleSubmit}>
                 {this.renderInput("fullName", "Full Name", "text")}
@@ -105,7 +113,7 @@ class AddressForm extends Form {
                 {this.renderInput("pin", "Pin code", "text")}
                 {this.renderInput("phoneNumber", "Phone Number", "text")}
                 {this.renderCheckBox("defaultAddress", "Save Default Address")}
-                {this.renderButton("Add Address")}
+                {this.renderButton("Save Address")}
               </form>
             </div>
           </div>
@@ -115,17 +123,25 @@ class AddressForm extends Form {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
+  const id = ownProps.match.params.id;
+  const addresses = state.firestore.data.addresses;
+
+  const address = addresses ? addresses[id] : null;
+
   return {
     cities: state.location.cities,
     states: state.location.states,
-    auth: state.firebase.auth
+    auth: state.firebase.auth,
+    address,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    addAddress: address => dispatch(addAddress(address))
+    addAddress: (address) => dispatch(addAddress(address)),
+    updateAddress: (address) =>
+      dispatch(updateAddress(address, ownProps.match.params.id)),
   };
 };
 export default compose(
