@@ -31,7 +31,7 @@ class AddressForm extends Form {
 
     this.setState({ cities, states });
     const addressId = this.props.match.params.id;
-    const data = { ...this.state.data };
+    // const data = { ...this.state.data };
     if (addressId === "new")
       return this.setState({ isAdd: true, headerLabel: "Add Address" });
 

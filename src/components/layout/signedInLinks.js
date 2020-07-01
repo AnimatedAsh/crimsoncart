@@ -1,50 +1,70 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { signOut } from "../../store/auth/actions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+
 const SignedInLinks = (props) => {
-  useEffect(() => {
-    let popover_element = document.querySelectorAll('[data-toggle="popover"]');
-    //popover_element.popover();
-  });
+  function renderTooltip(key, data) {
+    return <Tooltip id={`tooltip-${key}`}>{data}</Tooltip>;
+  }
   return (
     <ul className="navbar-nav ml-auto">
-      <li className="nav-item">
-        <Link key="cart" className="cart" to="/cart">
-          <span
-            className="fa-layers cart-icon fa-fw"
-            data-toggle="popover"
-            data-placement="bottom"
-            data-content={`Subtotal ${props.cartTotal.totalPrice}`}
-          >
-            <FontAwesomeIcon
-              className="circle cart-circle"
-              icon="circle"
-              size="3x"
-            />
+      <OverlayTrigger
+        key="cart"
+        placement="bottom"
+        delay={{ show: 250 }}
+        overlay={renderTooltip("cart", "Manage Cart and Checkout.")}
+      >
+        <li className="nav-item">
+          <Link key="cart" className="cart" to="/cart">
+            <span
+              className="fa-layers cart-icon fa-fw"
+              data-toggle="popover"
+              data-placement="bottom"
+              data-content={`Subtotal ${props.cartTotal.totalPrice}`}
+            >
+              <FontAwesomeIcon
+                className="circle cart-circle"
+                icon="circle"
+                size="3x"
+              />
 
-            <FontAwesomeIcon
-              className="shopping-cart"
-              icon="shopping-cart"
-              transform="shrink-6 right-2 "
-              size="2x"
-              color="#343a40"
-            />
-          </span>
-          <span className="badge badge-warning cart-item-count-badge">
-            {props.cartTotal.productQuantity}
-          </span>
-        </Link>
-      </li>
-      <li className="nav-item">
-        <Link
-          className="nav-link rounded-circle border-info avatar ml-4"
-          to="/profile"
-        >
-          {props.profile.initials}
-        </Link>
-      </li>
+              <FontAwesomeIcon
+                className="shopping-cart"
+                icon="shopping-cart"
+                transform="shrink-6 right-2 "
+                size="2x"
+                color="#343a40"
+              />
+            </span>
+
+            <span className="badge badge-warning cart-item-count-badge">
+              {props.cartTotal.productQuantity}
+            </span>
+          </Link>
+        </li>
+      </OverlayTrigger>
+      <OverlayTrigger
+        key="profile"
+        placement="bottom"
+        delay={{ show: 250, hide: 500 }}
+        overlay={renderTooltip(
+          "profile",
+          "Manage Profile, Addresses and Orders."
+        )}
+      >
+        <li className="nav-item">
+          <Link
+            className="nav-link rounded-circle border-info avatar ml-4"
+            to="/profile"
+          >
+            {props.profile.initials}
+          </Link>
+        </li>
+      </OverlayTrigger>
       <li className="nav-item">
         <a className="nav-link" onClick={props.signOut}>
           Log Out

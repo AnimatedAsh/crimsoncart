@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { compose } from "redux";
+import { firestoreConnect } from "react-redux-firebase";
 import ProfileItems from "./profileItems";
 import AddressList from "../addresses/addressList";
 import AddressForm from "../addresses/addressForm";
@@ -33,10 +35,10 @@ class ProfileSummary extends Component {
     );
   }
 
-  renderAddresses() {
+  renderAddresses(addresses) {
     return (
       <div className="container">
-        <AddressList />
+        <AddressList addresses={addresses} />
       </div>
     );
   }
@@ -50,7 +52,8 @@ class ProfileSummary extends Component {
   }
   renderComponent(param) {
     const open = param.navitem && param.id ? param.id : param.navitem;
-    if (open && open === "addresses") return this.renderAddresses();
+    if (open && open === "addresses")
+      return this.renderAddresses(this.props.addresses);
     else if (open && open === "new") return this.renderAddressForm();
     else if (open && open !== "new") return this.renderAddressForm(open);
 
@@ -73,7 +76,21 @@ class ProfileSummary extends Component {
 const mapStateToProps = (state) => {
   return {
     items: state.profileItems.items,
+    auth: state.firebase.auth,
+    addresses: state.firestore.ordered.addresses,
   };
 };
 
-export default connect(mapStateToProps)(ProfileSummary);
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect((props) => {
+    if (!props.auth.uid) return [];
+    return [
+      {
+        collection: "addresses",
+        where: [["userId", "==", props.auth.uid]],
+        orderBy: ["createdAt", "desc"],
+      },
+    ];
+  })
+)(ProfileSummary);

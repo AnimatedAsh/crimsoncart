@@ -1,6 +1,4 @@
 import React from "react";
-import { compose } from "redux";
-import { firestoreConnect } from "react-redux-firebase";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,22 +29,5 @@ const AddressList = (props) => {
     </div>
   );
 };
-const mapStateToProps = (state) => {
-  return {
-    auth: state.firebase.auth,
-    addresses: state.firestore.ordered.addresses,
-  };
-};
-export default compose(
-  connect(mapStateToProps),
-  firestoreConnect((props) => {
-    if (!props.auth.uid) return [];
-    return [
-      {
-        collection: "addresses",
-        where: [["userId", "==", props.auth.uid]],
-        orderBy: ["createdAt", "desc"],
-      },
-    ];
-  })
-)(AddressList);
+
+export default AddressList;

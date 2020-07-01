@@ -28,6 +28,7 @@ let products = [
     numberInStock: 5,
     price: 499,
     productImageURL: "../img/whiteceramicpot.jpg",
+    thumbImageUrl: "../img/whiteceramicpot_2.jpg",
     userRating: 4,
   },
 ];

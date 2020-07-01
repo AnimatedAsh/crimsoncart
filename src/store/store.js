@@ -9,7 +9,14 @@ import fbConfig, { rrfConfig } from "../config/fbConfig";
 const middlewares = [thunk.withExtraArgument(getFirebase)];
 export const store = createStore(
   rootReducer,
-  compose(applyMiddleware(...middlewares))
+
+  compose(
+    applyMiddleware(...middlewares),
+    typeof window === "object" &&
+      typeof window.__REDUX_DEVTOOLS_EXTENSION__ !== "undefined"
+      ? window.__REDUX_DEVTOOLS_EXTENSION__()
+      : (f) => f
+  )
 );
 
 export const rrfProps = {
@@ -18,5 +25,5 @@ export const rrfProps = {
   userProfile: "users",
   config: { fbConfig, ...rrfConfig },
   dispatch: store.dispatch,
-  createFirestoreInstance
+  createFirestoreInstance,
 };

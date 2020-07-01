@@ -17,6 +17,7 @@ class ProductCard extends Component {
       _id,
       title,
       productImageURL,
+      thumbImageUrl,
       price,
       numberInStock,
       userRating,
@@ -26,7 +27,7 @@ class ProductCard extends Component {
     return (
       <div className="col mb-4 card-deck">
         <div className="card h-100">
-          <Thumb alt={title} productImageURL={productImageURL} />
+          <Thumb alt={title} productImageURL={thumbImageUrl} />
           <div className="card-body text-dark">
             <h5 className="card-title">{title}</h5>
 
@@ -34,6 +35,8 @@ class ProductCard extends Component {
               <i className="fas fa-rupee-sign" />
               <span className="product_price">{price}</span>
             </p>
+          </div>
+          <div className="container align-items-end item-cardfooter">
             <button
               type="button"
               className="btn btn-dark"
@@ -42,17 +45,11 @@ class ProductCard extends Component {
             >
               Add To Cart
             </button>
-            {/* <a
-              href="#"
-              className="btn btn-dark"
-              role="button"
-             
-            >
-              Add to Cart
-            </a> */}
+
             <p className="card-text">
               <small>In Stock {numberInStock}</small>
             </p>
+
             <StarRating rating={userRating} />
           </div>
         </div>

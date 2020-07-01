@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap");
 body {
   margin: 0;
   height: 100vh;
@@ -157,4 +158,63 @@ a.profile-card:hover {
 }
 .btn {
   margin-top: 2em;
+}
+
+#tooltip-cart > .tooltip-inner,
+#tooltip-profile > .tooltip-inner {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid pink;
+}
+
+#tooltip-cart > .tooltip-arrow,
+#tooltip-profile > .tooltip-arrow {
+  border-top: 5px solid pink;
+  color: pink;
+}
+
+.no-margin-top {
+  margin-top: 0;
+}
+
+.EmptyState {
+  margin: 250px 0;
+}
+@media screen and (min-width: 641px) {
+  .EmptyState {
+    margin: 200px 0;
+  }
+}
+
+@media screen and (min-width: 1240px) {
+  .EmptyState {
+    margin: 250px 250px;
+  }
+}
+
+.container-fluid {
+  height: 100vh !important;
+}
+
+.fullheight {
+  height: 100vh !important;
+}
+.fullwidth {
+  width: 100% !important;
+}
+.item-cardfooter {
+  margin-bottom: 0.8em;
+}
+
+.mask {
+  /* mask-image: linear-gradient(to top, transparent 0.2%, black 80%); */
+  color: rgba(0, 0, 0, 0.7);
+  filter: grayscale(20%);
+}
+
+.carousel-caption {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 0.2em;
+  font-family: "Julius Sans One", sans-serif;
+  text-shadow: 0.5em 0.5em 1em grey;
 }
